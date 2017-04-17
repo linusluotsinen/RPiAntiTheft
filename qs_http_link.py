@@ -3,10 +3,15 @@ from util.link import HTTPLink
 from util.http_server import HttpServerHandler
 from util.http_query import HTTPQuery
 from util.protocol import JSONQueryStringProtocol
+from util.gps_handler.gps_fence_handler import GpsFenceHandler
+from util.data_store import JSONDataStore
 
 class QSHttpClient(HTTPLink):
     def __init__(self, settings_file):
         super(QSHttpClient, self).__init__(settings_file)
+        self.create_default_settings({"gps_fence_file":"config/gps_fence_client.json"})
+        if self.settings.is_file() == False:
+            self.settings.save()
         self.query = HTTPQuery()
         self.protocol = JSONQueryStringProtocol()
     
@@ -15,7 +20,6 @@ class QSHttpClient(HTTPLink):
         url = self.get_url()
         url = url + "?" + qs
         response, response_code = self.query.query(url)
-
         resp_dict = {"response":{"text":response, "code":response_code}}
         message_dict = {"message":message}
         log_dict = {}
@@ -45,8 +49,11 @@ class QSHttpServerHandler(HttpServerHandler):
 class QSHttpServer(HTTPLink):
     def __init__(self, settings_file):
         super(QSHttpServer, self).__init__(settings_file)
+        self.create_default_settings({"gps_fence_file":"config/gps_fence_server.json"})
         self.handler = QSHttpServerHandler(self)
-
+        if self.settings.is_file() == False:
+            self.settings.save()
+            
     def get_handler(self):
         return self.handler
 
@@ -61,6 +68,13 @@ class QSHttpServer(HTTPLink):
             if cmd == 'ping':
                 response = "Ok"
             elif cmd == 'log':
+                response = "Ok"
+            elif cmd == 'gps_fence_sync':
+                fence_file = self.settings.get_data()["gps_fence_file"]
+                fence_settings = JSONDataStore(fence_file)
+                gpsfh = GpsFenceHandler(fence_settings)
+                response = fence_settings.get_data()
+            elif cmd == 'gps_fence_check':
                 response = "Ok"
             else:
                 response = "Unknown command"

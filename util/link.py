@@ -79,8 +79,7 @@ class HTTPLink(URLLink):
     def __init__(self, settings_file):
         super(HTTPLink, self).__init__(settings_file)
         self.create_default_settings({"page":"index.html"})
-        if self.settings.is_file() == False:
-            self.settings.save()
+        
 
     def get_url(self):
         url = super(HTTPLink, self).get_url()

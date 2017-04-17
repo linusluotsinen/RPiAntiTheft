@@ -1,1 +1,1 @@
-{"host": "localhost", "protocol": "http", "log_dir": "log/", "sent_log_file": "sent.log", "port": 8000, "received_log_file": "received.log", "page": "index.html"}
+{"host": "localhost", "protocol": "http", "log_dir": "log/", "gps_fence_file": "config/gps_fence_client.json", "sent_log_file": "sent.log", "port": 8000, "received_log_file": "received.log", "page": "index.html"}
