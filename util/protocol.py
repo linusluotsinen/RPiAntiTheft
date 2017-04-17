@@ -30,25 +30,27 @@ class QueryStringProtocol(Protocol):
         return qs
 
     def decode(self, data):
-        dictionary = urlparse.parse_qs(data)
-        for key in dictionary.keys():
-            value = dictionary[key]
-            dictionary[key] = value[0]
-        return dictionary
+        return data
 
 class JSONQueryStringProtocol(Protocol):
     def __init__(self):
         super(JSONQueryStringProtocol, self).__init__()
+        self.label = "json"
     
     def encode(self, data):
-        qs = "data=" + json.dumps(data)
+        qs = self.label + '=' + json.dumps(data)
         return qs
 
     def decode(self, data):
         dictionary = urlparse.parse_qs(data)
-        qs_data = dictionary["data"]
-        d = json.loads(qs_data[0])
-        return d
+        qs_data = dictionary.get(self.label)
+        ret = {}
+        if qs_data is not None:
+           if len(qs_data) > 0:
+               str_val = qs_data[0]
+               ret = json.loads(str_val)
+        print ret
+        return ret
 
 if __name__ == '__main__':
     qsProtocol = JSONQueryStringProtocol()
