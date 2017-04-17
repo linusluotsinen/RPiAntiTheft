@@ -3,6 +3,9 @@ import os
 from util.reflection import Reflection
 from util.data_store import JSONDataStore
 from util.tmux import TmuxHandler
+from util.gps_handler.gps_handler import GpsHandler
+from sense_hat import SenseHat
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -23,9 +26,14 @@ if __name__ == '__main__':
     parser.add_argument('-query', '--query', default=None, type=str,
                         help="Query server from client")
 
-    
     parser.add_argument('-ping', '--ping', default=False, action="store_true",
                         help="Ping server.")
+
+    parser.add_argument('-gps', '--gps', default=False, action="store_true",
+                        help="Send GPS data to server.")
+
+    parser.add_argument('-sensehat', '--sensehat', default=False, action="store_true",
+                        help="Send sensehat data to server.")
     
     parser.add_argument('-server', '--server', default="QSHttpServer", type=str,
                         help="Server class name")
@@ -67,3 +75,23 @@ if __name__ == '__main__':
     if args.ping == True:
         cmd = {'command':'ping'}
         print client.send_message(cmd)
+
+    sensor_data = {}
+    if args.gps == True:
+        gpsh = GpsHandler()
+        gps_data = gpsh.get_gps_data()
+        sensor_data.update({"gps": gps_data})
+    
+    if args.sensehat == True:
+        sense = SenseHat()
+        senshat_data = {}
+        senshat_data.update(sense.get_orientation())
+        weather = {'temperature':sense.get_temperature(), 'pressure':sense.get_pressure(), 'humidity':sense.get_humidity()}
+        senshat_data.update(weather)
+        sensor_data.update({"sensehat": senshat_data})
+    
+    if len(sensor_data) > 0:
+        cmd = {'command':'log'}
+        cmd.update(sensor_data)
+        print client.send_message(cmd)
+        

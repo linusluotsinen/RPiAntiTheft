@@ -60,11 +60,11 @@ class QSHttpServer(HTTPLink):
             cmd = message['command']
             if cmd == 'ping':
                 response = "Ok"
-            if cmd == 'log':
-                pass
-            elif cmd == 'gps_fence':
-                pass
-        
+            elif cmd == 'log':
+                response = "Ok"
+            else:
+                response = "Unknown command"
+            
         message_dict = {"message":message}
         resp_dict = {"response":{"text":response}}
         log_dict = {}
