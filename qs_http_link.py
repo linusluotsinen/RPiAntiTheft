@@ -15,11 +15,15 @@ class QSHttpClient(HTTPLink):
         url = self.get_url()
         url = url + "?" + qs
         response, response_code = self.query.query(url)
+
+        resp_dict = {"response":{"text":response, "code":response_code}}
+        message_dict = {"message":message}
+        log_dict = {}
+        log_dict.update(message_dict)
+        log_dict.update(resp_dict)
+        self.write_to_sent_log(log_dict)
         
-        #if response_code == 200:
-        #    pass
-        
-        return response
+        return response, response_code
     
     def on_message_received(self, message):
         pass
@@ -51,6 +55,7 @@ class QSHttpServer(HTTPLink):
 
     def on_message_received(self, message):
         response = None
+        
         if 'command' in message:
             cmd = message['command']
             if cmd == 'ping':
@@ -59,4 +64,12 @@ class QSHttpServer(HTTPLink):
                 pass
             elif cmd == 'gps_fence':
                 pass
+        
+        message_dict = {"message":message}
+        resp_dict = {"response":{"text":response}}
+        log_dict = {}
+        log_dict.update(message_dict)
+        log_dict.update(resp_dict)
+        self.write_to_received_log(log_dict)
+        
         return response

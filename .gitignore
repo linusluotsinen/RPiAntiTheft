@@ -97,5 +97,7 @@ ENV/
 # mkdocs documentation
 /site
 
-# pyc
+# other
 *.pyc
+log/
+
