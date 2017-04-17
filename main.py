@@ -134,9 +134,9 @@ if __name__ == '__main__':
         gpsfh_client.get_settings().save()
 
         if gpsfh_client.get_settings().get_data()["enabled"] == True:
-            sense.set_pixel(1,0,255,0,0)
-        else:
             sense.set_pixel(1,0,0,255,0)
+        else:
+            sense.set_pixel(1,0,255,0,0)
 
     if args.gps_fence_check == True:
         cmd = {'command':'gps_fence_check'}
