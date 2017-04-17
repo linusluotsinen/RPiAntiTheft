@@ -1,1 +1,1 @@
-{"thresholds": {"dist": 100, "speed": 10}, "enabled": true, "gps": {"latitude": 59.403773868, "utc": "2017-04-17T19:39:51.000Z", "altitude": 52.236, "speed": 0.0, "longitude": 17.945689361}}
+{"thresholds": {"speed": 10, "dist": 100}, "enabled": true, "gps": {"latitude": 59.403872766, "utc": "2017-04-17T20:29:18.000Z", "altitude": 30.618, "speed": 0.0, "longitude": 17.945547094}}

@@ -70,7 +70,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     reflection = Reflection()
-
+    sense = SenseHat()
+    
     cls_client = reflection.get_class(args.link_module,args.client)
     client = cls_client(args.client_settings_file)
     
@@ -93,7 +94,11 @@ if __name__ == '__main__':
 
     if args.ping == True:
         cmd = {'command':'ping'}
-        print client.send_message(cmd)
+        response,code = client.send_message(cmd)
+        if response == "Ok":
+            sense.set_pixel(0,0,0,255,0)
+        else:
+            sense.set_pixel(0,0,255,0,0)
 
     sensor_data = {}
     if args.gps == True:
@@ -102,7 +107,6 @@ if __name__ == '__main__':
         sensor_data.update({"gps": gps_data})
     
     if args.sensehat == True:
-        sense = SenseHat()
         senshat_data = {}
         senshat_data.update(sense.get_orientation())
         weather = {'temperature':sense.get_temperature(), 'pressure':sense.get_pressure(), 'humidity':sense.get_humidity()}
@@ -129,6 +133,11 @@ if __name__ == '__main__':
         gpsfh_client.get_settings().set_data(response);
         gpsfh_client.get_settings().save()
 
+        if gpsfh_client.get_settings().get_data()["enabled"] == True:
+            sense.set_pixel(1,0,255,0,0)
+        else:
+            sense.set_pixel(1,0,0,255,0)
+
     if args.gps_fence_check == True:
         cmd = {'command':'gps_fence_check'}
         gpsfh_client = GpsFenceHandler(JSONDataStore(args.gps_fence_settings_file_client))
@@ -137,7 +146,16 @@ if __name__ == '__main__':
         check = gpsfh_client.check_triggers(gps_data)
         cmd.update(check)
         response, code = client.send_message(cmd)
-        
+        if check["dist"] == False:
+            sense.set_pixel(1,1,0,255,0)
+        else:
+            sense.set_pixel(1,1,255,0,0)
+
+        if check["speed"] == False:
+            sense.set_pixel(1,2,0,255,0)
+        else:
+            sense.set_pixel(1,2,255,0,0)
+            
     if args.gps_fence_enable == True:
         gpsfh_server = GpsFenceHandler(JSONDataStore(args.gps_fence_settings_file_server))
         gpsfh_server.enable()

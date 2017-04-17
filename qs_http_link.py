@@ -20,6 +20,9 @@ class QSHttpClient(HTTPLink):
         url = self.get_url()
         url = url + "?" + qs
         response, response_code = self.query.query(url)
+        if response_code == -1:
+            response = "Error"
+            
         resp_dict = {"response":{"text":response, "code":response_code}}
         message_dict = {"message":message}
         log_dict = {}

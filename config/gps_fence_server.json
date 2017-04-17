@@ -1,1 +1,1 @@
-{"thresholds": {"dist": 100, "speed": 10}, "enabled": true, "gps": null}
+{"thresholds": {"speed": 10, "dist": 100}, "enabled": true, "gps": null}
