@@ -35,13 +35,21 @@ class URLLink(Link):
         super(URLLink, self).__init__(settings_file)
         self.create_default_settings({"protocol":"http", "host":"localhost", "port":"80"})
 
+    def get_url(self):
+        data = self.settings.get_data()
+        url = data["protocol"] + "://" + data["host"] + ":" + data["port"]
+        return url
+    
 class HTTPLink(URLLink):
     __metaclass__ = ABCMeta
 
     def __init__(self, settings_file):
         super(HTTPLink, self).__init__(settings_file)
         self.create_default_settings({"page":"index.html"})
-        print self.settings.get_data()
         if self.settings.is_file() == False:
             self.settings.save()
-        
+
+    def get_url(self):
+        url = super(HTTPLink, self).get_url()
+        data = self.settings.get_data()
+        url = url + "/" + data["page"]

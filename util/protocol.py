@@ -49,7 +49,6 @@ class JSONQueryStringProtocol(Protocol):
            if len(qs_data) > 0:
                str_val = qs_data[0]
                ret = json.loads(str_val)
-        print ret
         return ret
 
 if __name__ == '__main__':

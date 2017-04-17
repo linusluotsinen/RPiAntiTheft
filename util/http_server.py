@@ -20,7 +20,9 @@ class GenericHttpRequestHandler(BaseHTTPRequestHandler):
                 value = dictionary[key]
                 qs_str = qs_str + key + "=" + value[0] + "&"
             qs = qs_str
-        response = self.server.handler.process_qs(path, qs)
+        response = None
+        if qs is not None:
+            response = self.server.handler.process_qs(path, qs)
         self.send_response(200)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
