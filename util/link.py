@@ -53,3 +53,4 @@ class HTTPLink(URLLink):
         url = super(HTTPLink, self).get_url()
         data = self.settings.get_data()
         url = url + "/" + data["page"]
+        return url

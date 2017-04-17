@@ -20,6 +20,13 @@ if __name__ == '__main__':
     parser.add_argument('-client-settings-file', '--client-settings-file', default="config/client.json", type=str,
                         help="Client settings file")
 
+    parser.add_argument('-query', '--query', default=None, type=str,
+                        help="Query server from client")
+
+    
+    parser.add_argument('-ping', '--ping', default=False, action="store_true",
+                        help="Ping server.")
+    
     parser.add_argument('-server', '--server', default="QSHttpServer", type=str,
                         help="Server class name")
     
@@ -39,8 +46,8 @@ if __name__ == '__main__':
     cls_client = reflection.get_class(args.link_module,args.client)
     client = cls_client(args.client_settings_file)
     
-    cls_server = reflection.get_class(args.link_module,args.server)
-    server = cls_server(args.server_settings_file)
+    #cls_server = reflection.get_class(args.link_module,args.server)
+    #server = cls_server(args.server_settings_file)
 
     tmux = TmuxHandler()
     if args.start_http_server == True:
@@ -55,3 +62,8 @@ if __name__ == '__main__':
         print("Stopping http server running in tmux mode...")
         cmd = "tmux kill-session -t " + name
         os.system(cmd)
+
+
+    if args.ping == True:
+        cmd = {'command':'ping'}
+        print client.send_message(cmd)

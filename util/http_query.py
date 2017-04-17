@@ -1,12 +1,14 @@
 import argparse
 import urllib2
 #import urllib.request
+#import urllib
 
 class HTTPQuery:
     def __init__(self):
         pass
     
     def query(self, myurl):
+        #myurl = urllib.urlencode(myurl)
         proxy_support = urllib2.ProxyHandler({})
         opener = urllib2.build_opener(proxy_support)
         

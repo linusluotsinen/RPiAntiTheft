@@ -11,13 +11,16 @@ class QSHttpClient(HTTPLink):
         self.protocol = JSONQueryStringProtocol()
     
     def send_message(self, message):
-        qs = protocol.encode(message)
+        qs = self.protocol.encode(message)
         url = self.get_url()
         url = url + "?" + qs
         response, response_code = self.query.query(url)
-        if response_code == 200:
-            pass
-
+        
+        #if response_code == 200:
+        #    pass
+        
+        return response
+    
     def on_message_received(self, message):
         pass
     
@@ -47,10 +50,13 @@ class QSHttpServer(HTTPLink):
         pass
 
     def on_message_received(self, message):
+        response = None
         if 'command' in message:
             cmd = message['command']
+            if cmd == 'ping':
+                response = "Ok"
             if cmd == 'log':
                 pass
             elif cmd == 'gps_fence':
                 pass
-            
+        return response

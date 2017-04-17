@@ -39,6 +39,8 @@ class JSONQueryStringProtocol(Protocol):
     
     def encode(self, data):
         qs = self.label + '=' + json.dumps(data)
+        qs = qs.replace (" ","%20")
+        qs = qs.replace ('"',"%22")
         return qs
 
     def decode(self, data):
